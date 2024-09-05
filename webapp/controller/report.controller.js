@@ -336,7 +336,7 @@ sap.ui.define([
 
 		handleSearchRequestId: function (oEvent) {
 
-			var oDataModel = this.getOwnerComponent().getModel("EclaimSrvModel");
+			var oDataModel = this.getOwnerComponent().getModel("Catalog");
 			//var uluFdluFilter;// = [];
 			var orFilter = [];
 			var andFilter = [];
@@ -398,7 +398,7 @@ sap.ui.define([
 			if (userRoleGrp === "NUS_CHRS_ECLAIMS_SUPER_ADMIN" || (!!claimAuthorizations && claimAuthorizations.length > 0)) {
 				var that = this;
 
-				oDataModel.read("/EclaimRequestViews", {
+				oDataModel.read("/eclaims_data", {
 					filters: [filtersGrp],
 					urlParameters: {
 						"$select": "REQUEST_ID"
@@ -436,7 +436,7 @@ sap.ui.define([
 				var aFilters = [];
 
 				var that = this;
-				oDataModel.read("/ChrsFdluUlus", {
+				oDataModel.read("/CHRS_JOB_INFO", {
 
 					filters: aFilters,
 					success: function (oData) {
@@ -574,7 +574,7 @@ sap.ui.define([
 			var userRoleGrp = this.AppModel.getProperty("/userRoleGrp"); //Super Admin
 
 			if (userRoleGrp === "NUS_CHRS_ECLAIMS_SUPER_ADMIN") {
-				var oDataModel = this.getOwnerComponent().getModel("EclaimSrvModel");
+				var oDataModel = this.getOwnerComponent().getModel();
 				var filterUluCode = new sap.ui.model.Filter("ULU_C", sap.ui.model.FilterOperator.Contains, sValue);
 				var filterUluName = new sap.ui.model.Filter("ULU_T", sap.ui.model.FilterOperator.Contains, sValue);
 				var filtersUluGrp = new Filter({
@@ -584,7 +584,7 @@ sap.ui.define([
 				//var aFilters = [];
 
 				var that = this;
-				oDataModel.read("/ChrsFdluUlus", {
+				oDataModel.read("/CHRS_JOB_INFO", {
 
 					filters: [filtersUluGrp],
 					success: function (oData) {
@@ -1956,12 +1956,12 @@ sap.ui.define([
 		//
 		onDataExport: function (oEvent) {
 			//	if (this.AppModel.getProperty("/claimRequest/UluList").length > 0) {
-			var oDataModel = this.getOwnerComponent().getModel("EclaimSrvModel");
+			var oDataModel = this.getOwnerComponent().getModel("Eclaims");
 			this.searchFilter();
 			var aFilter = this.AppModel.getProperty("/aSearchFilter");
 			if (!!aFilter && aFilter.length > 0) {
 				//this._fnHandleDataToExport(oData.results);
-				oDataModel.read("/EclaimsItemViews", {
+				oDataModel.read("/v_eclaim_item_view", {
 					filters: [aFilter],
 					success: function (oData) {
 						if (oData) {

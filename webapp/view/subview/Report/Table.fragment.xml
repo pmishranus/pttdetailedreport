@@ -4,7 +4,7 @@
 	<ScrollContainer width="100%" horizontal="true" vertical="true" focusable="true">
 		<Table id="idClaimRequestsTable" inset="false" growing="true" growingThreshold="20" growingScrollToLoad="true"
 			itemPress="onPressRequestItem" sticky="ColumnHeaders,HeaderToolbar" selectionChange="onSelectRequestItem"
-			items="{ path: 'EclaimSrvModel>/EclaimRequestViews', sorter: { path: 'DRAFT_ID', descending: true}, parameters:{expand : 'MasterClaimTypeDetails,EclaimsItemDataDetails,StatusConfigDetails'},templateShareable:true}">
+			items="{ path: 'Eclaims>/v_eclaim_item_view', sorter: { path: 'DRAFT_ID', descending: true}, parameters:{expand : 'MasterClaimTypeDetails,EclaimsItemDataDetails,StatusConfigDetails'},templateShareable:true}">
 			<headerToolbar>
 				<OverflowToolbar>
 					<content>
@@ -157,62 +157,62 @@
 			<items>
 				<ColumnListItem type="Active" press="onPressPreviewClaimRequest">
 					<cells>
-						<!--<ObjectIdentifier title="{= ${EclaimSrvModel>STATUS_CODE} === '01' ? 'Draft' : ${EclaimSrvModel>REQUEST_ID} }"/>-->
-						<Text text="{= ${EclaimSrvModel>STATUS_CODE} === '01' ? 'Draft' : ${EclaimSrvModel>REQUEST_ID} }" class="tableDataTextSize"/>
-						<Text text="{EclaimSrvModel>CLAIM_YEAR}"/>
-						<Text text="{EclaimSrvModel>CLAIM_MONTH}"/>
-						<Text text="{EclaimSrvModel>CLAIM_TYPE_T}"/>
-						<tnt:InfoLabel text="{EclaimSrvModel>STATUS_ALIAS}" tooltip="{ClaimRequestHistory>statusDisplay}"
-							colorScheme="{EclaimSrvModel>STATUS_COLOR_CODE}" displayOnly="false"/>
-						<Text text="{EclaimSrvModel>STAFF_ID}"/>
-						<Text text="{EclaimSrvModel>FULL_NM}"/>
+						<!--<ObjectIdentifier title="{= ${Eclaims>STATUS_CODE} === '01' ? 'Draft' : ${Eclaims>REQUEST_ID} }"/>-->
+						<Text text="{= ${Eclaims>STATUS_CODE} === '01' ? 'Draft' : ${Eclaims>REQUEST_ID} }" class="tableDataTextSize"/>
+						<Text text="{Eclaims>CLAIM_YEAR}"/>
+						<Text text="{Eclaims>CLAIM_MONTH}"/>
+						<Text text="{Eclaims>CLAIM_TYPE_T}"/>
+						<tnt:InfoLabel text="{Eclaims>STATUS_ALIAS}" tooltip="{ClaimRequestHistory>statusDisplay}"
+							colorScheme="{Eclaims>STATUS_COLOR_CODE}" displayOnly="false"/>
+						<Text text="{Eclaims>STAFF_ID}"/>
+						<Text text="{Eclaims>FULL_NM}"/>
 						<!--<VBox>-->
-						<Text text="{EclaimSrvModel>ULU}"/>
-						<Text text="{EclaimSrvModel>ULU_T}"/>
-						<Text text="{EclaimSrvModel>FDLU}"/>
-						<Text text="{EclaimSrvModel>FDLU_T}"/>
+						<Text text="{Eclaims>ULU}"/>
+						<Text text="{Eclaims>ULU_T}"/>
+						<Text text="{Eclaims>FDLU}"/>
+						<Text text="{Eclaims>FDLU_T}"/>
 						<!--</VBox>-->
-						<Text text="{EclaimSrvModel>EMP_GP_T}"/>
-						<!--<Text text="{EclaimSrvModel>DATE_JOINED}"/>-->
-						<Text text="{ path: 'EclaimSrvModel>DATE_JOINED', type: 'sap.ui.model.type.Date', formatOptions: { style: 'short' } }"/>
-						<Text text="{EclaimSrvModel>RATE_DESC}"/>
-						<Text text="{EclaimSrvModel>CLAIM_START_DATE}"/>
-						<Text text="{EclaimSrvModel>CLAIM_END_DATE}"/>
-						<Text text="{EclaimSrvModel>CLAIM_DAY}"/>
-						<Text text="{EclaimSrvModel>START_TIME}"/>
-						<Text text="{EclaimSrvModel>END_TIME}"/>
-						<Text text="{EclaimSrvModel>HOURS}"/>
-						<Text text="{EclaimSrvModel>RATE_TYPE_AMOUNT}"/>
-						<Text text="{EclaimSrvModel>TOTAL_AMOUNT}"/>
-						<Text text="{EclaimSrvModel>WBS}"/>
-						<Text text="{EclaimSrvModel>REMARKS}"/>
-						<!--<Text text="{EclaimSrvModel>SUBMITTED_ON}"/>-->
-						<Text text="{ path: 'EclaimSrvModel>SUBMITTED_ON', type: 'sap.ui.model.type.Date', formatOptions: { style: 'short' } }"/>
-						<Text text="{EclaimSrvModel>SUBMITTED_BY}"/>
-						<!--<Text text="{EclaimSrvModel>VERIFIED_ON}"/>-->
-						<Text text="{ path: 'EclaimSrvModel>VERIFIED_ON', type: 'sap.ui.model.type.Date', formatOptions: { style: 'short' } }"/>
-						<Text text="{EclaimSrvModel>VERIFIER_STAFF_ID}"/>
-						<Text text="{EclaimSrvModel>VERIFIER_STAFF_FULL_NAME}"/>
-						<Text text="{EclaimSrvModel>ADD_APP_1_STAFF_ID}"/>
-						<Text text="{EclaimSrvModel>ADD_APP_1_STAFF_FULL_NAME}"/>
-						<!--<Text text="{EclaimSrvModel>ADD_APRV_1_ON}"/>-->
-						<Text text="{ path: 'EclaimSrvModel>ADD_APRV_1_ON', type: 'sap.ui.model.type.Date', formatOptions: { style: 'short' } }"/>
-						<Text text="{EclaimSrvModel>ADDITIONAL_APP_2_STAFF_ID}"/>
-						<Text text="{EclaimSrvModel>ADDITIONAL_APP_2_STAFF_FULL_NAME}"/>
-						<!--<Text text="{EclaimSrvModel>ADD_APRV_2_ON}"/>-->
-						<Text text="{ path: 'EclaimSrvModel>ADD_APRV_2_ON', type: 'sap.ui.model.type.Date', formatOptions: { style: 'short' } }"/>
-						<!--<Text text="{EclaimSrvModel>APPROVED_ON}"/>-->
-						<Text text="{ path: 'EclaimSrvModel>APPROVED_ON', type: 'sap.ui.model.type.Date', formatOptions: { style: 'short' } }"/>
-						<Text text="{EclaimSrvModel>APPROVED_BY}"/>
-						<Text text="{EclaimSrvModel>APPROVER_STAFF_FULL_NAME}"/>
-						<Text text="{EclaimSrvModel>CA_REMARKS}"/>
-						<Text text="{EclaimSrvModel>VERIFIER_REMARKS}"/>
-						<Text text="{EclaimSrvModel>APP_REMARKS}"/>
+						<Text text="{Eclaims>EMP_GP_T}"/>
+						<!--<Text text="{Eclaims>DATE_JOINED}"/>-->
+						<Text text="{ path: 'Eclaims>DATE_JOINED', type: 'sap.ui.model.type.Date', formatOptions: { style: 'short' } }"/>
+						<Text text="{Eclaims>RATE_DESC}"/>
+						<Text text="{Eclaims>CLAIM_START_DATE}"/>
+						<Text text="{Eclaims>CLAIM_END_DATE}"/>
+						<Text text="{Eclaims>CLAIM_DAY}"/>
+						<Text text="{Eclaims>START_TIME}"/>
+						<Text text="{Eclaims>END_TIME}"/>
+						<Text text="{Eclaims>HOURS}"/>
+						<Text text="{Eclaims>RATE_TYPE_AMOUNT}"/>
+						<Text text="{Eclaims>TOTAL_AMOUNT}"/>
+						<Text text="{Eclaims>WBS}"/>
+						<Text text="{Eclaims>REMARKS}"/>
+						<!--<Text text="{Eclaims>SUBMITTED_ON}"/>-->
+						<Text text="{ path: 'Eclaims>SUBMITTED_ON', type: 'sap.ui.model.type.Date', formatOptions: { style: 'short' } }"/>
+						<Text text="{Eclaims>SUBMITTED_BY}"/>
+						<!--<Text text="{Eclaims>VERIFIED_ON}"/>-->
+						<Text text="{ path: 'Eclaims>VERIFIED_ON', type: 'sap.ui.model.type.Date', formatOptions: { style: 'short' } }"/>
+						<Text text="{Eclaims>VERIFIER_STAFF_ID}"/>
+						<Text text="{Eclaims>VERIFIER_STAFF_FULL_NAME}"/>
+						<Text text="{Eclaims>ADD_APP_1_STAFF_ID}"/>
+						<Text text="{Eclaims>ADD_APP_1_STAFF_FULL_NAME}"/>
+						<!--<Text text="{Eclaims>ADD_APRV_1_ON}"/>-->
+						<Text text="{ path: 'Eclaims>ADD_APRV_1_ON', type: 'sap.ui.model.type.Date', formatOptions: { style: 'short' } }"/>
+						<Text text="{Eclaims>ADDITIONAL_APP_2_STAFF_ID}"/>
+						<Text text="{Eclaims>ADDITIONAL_APP_2_STAFF_FULL_NAME}"/>
+						<!--<Text text="{Eclaims>ADD_APRV_2_ON}"/>-->
+						<Text text="{ path: 'Eclaims>ADD_APRV_2_ON', type: 'sap.ui.model.type.Date', formatOptions: { style: 'short' } }"/>
+						<!--<Text text="{Eclaims>APPROVED_ON}"/>-->
+						<Text text="{ path: 'Eclaims>APPROVED_ON', type: 'sap.ui.model.type.Date', formatOptions: { style: 'short' } }"/>
+						<Text text="{Eclaims>APPROVED_BY}"/>
+						<Text text="{Eclaims>APPROVER_STAFF_FULL_NAME}"/>
+						<Text text="{Eclaims>CA_REMARKS}"/>
+						<Text text="{Eclaims>VERIFIER_REMARKS}"/>
+						<Text text="{Eclaims>APP_REMARKS}"/>
 						<!--<Text-->
-						<!--	text="{parts:[{path: 'EclaimSrvModel>CLAIM_MONTH'}, {path: 'EclaimSrvModel>CLAIM_YEAR'}], formatter : '.formatter.convertMonthcodeToName'}"/>-->
+						<!--	text="{parts:[{path: 'Eclaims>CLAIM_MONTH'}, {path: 'Eclaims>CLAIM_YEAR'}], formatter : '.formatter.convertMonthcodeToName'}"/>-->
 						<!--<VBox>-->
-						<!--	<Text text="{ path: 'EclaimSrvModel>CREATED_ON', type: 'sap.ui.model.type.DateTime', formatOptions: { pattern: 'd MMM, yyyy HH:mm:ss' } }"/>-->
-						<!--	<Text text="{ path: 'EclaimSrvModel>SUBMITTED_BY_NID'}"/>-->
+						<!--	<Text text="{ path: 'Eclaims>CREATED_ON', type: 'sap.ui.model.type.DateTime', formatOptions: { pattern: 'd MMM, yyyy HH:mm:ss' } }"/>-->
+						<!--	<Text text="{ path: 'Eclaims>SUBMITTED_BY_NID'}"/>-->
 						<!--</VBox>-->
 						<!--<Button icon="sap-icon://instance" press="onPressProcessInstance"/>-->
 					</cells>
