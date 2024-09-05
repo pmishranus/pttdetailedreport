@@ -15,8 +15,8 @@
 							<!--	value="{AppModel>/status}" valueHelpRequest="handleValueHelpStatus"></Input>-->
 							<MultiComboBox id="inpClaimStatus" showSecondaryValues="true" selectionChange="handleSelectionChangeClaimStatus"
 								selectionFinish="handleSelectionFinishClaimStatus" width="350px"
-								items="{ path: 'AppModel>/claimRequest/statusList', sorter: { path: 'STATUS_CODE' } }">
-								<core:ListItem key="{AppModel>STATUS_CODE}" text="{AppModel>STATUS_ALIAS}" additionalText=""/>
+								items="{Catalog>/statusconfig_data}">
+								<core:ListItem key="{Catalog>STATUS_CODE}" text="{Catalog>STATUS_ALIAS}" additionalText=""/>
 							</MultiComboBox>
 						</fb:control>
 					</fb:FilterGroupItem>

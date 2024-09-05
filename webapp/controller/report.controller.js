@@ -43,36 +43,38 @@ sap.ui.define([
 			// var currentDate = oDateFormat.format(new Date());
 			// this.AppModel.setProperty("/submissionStartDate", currentDate);
 			// this.AppModel.setProperty("/submissionEndDate", currentDate);
-			this.generateTokenForLoggedInUser();
+			// this.generateTokenForLoggedInUser();
+			this.onLoadInitialServices();
 
 			this.handleValueHelpPeriod();
 		},
-		_fnLoadMetaData: function () {
-			var serviceName = config.dbOperations.metadataclaims;
-			var token = this.AppModel.getProperty("/token");
-			var oHeaders = {
-				"Accept": "application/json",
-				"Authorization": "Bearer" + " " + token,
-				"AccessPoint": "A",
-				"Content-Type": "application/json"
-			};
+		// _fnLoadMetaData: function () {
+		// 	var serviceName = config.dbOperations.metadataclaims;
+		// 	var token = this.AppModel.getProperty("/token");
+		// 	var oHeaders = {
+		// 		"Accept": "application/json",
+		// 		"Authorization": "Bearer" + " " + token,
+		// 		"AccessPoint": "A",
+		// 		"Content-Type": "application/json"
+		// 	};
 
-			var oDataModel = new ODataModel({
-				serviceUrl: serviceName,
-				headers: oHeaders
-			});
-			oDataModel.setUseBatch(false);
-			oDataModel.metadataLoaded().then(function () {
-				this.getOwnerComponent().setModel(oDataModel, "EclaimSrvModel");
-				this.handleValueHelpStatus();
-				var noSearchHelpPopUp = 'Y';
-				this.handleValueHelpUlu(noSearchHelpPopUp);
-				this.handleValueHelpFdlu(noSearchHelpPopUp);
-				this.handleValueHelpRequestId();
-				this.handleValueHelpStaffId();
-				//				
-			}.bind(this));
-		},
+		// 	// var oDataModel = new ODataModel({
+		// 	// 	serviceUrl: serviceName,
+		// 	// 	headers: oHeaders
+		// 	// });
+		// 	var oDataModel = this.getOwnerComponent().getModel();
+		// 	// oDataModel.setUseBatch(false);
+		// 	oDataModel.metadataLoaded().then(function () {
+		// 	// this.getOwnerComponent().setModel(oDataModel, "EclaimSrvModel");
+		// 	this.handleValueHelpStatus();
+		// 	var noSearchHelpPopUp = 'Y';
+		// 	this.handleValueHelpUlu(noSearchHelpPopUp);
+		// 	this.handleValueHelpFdlu(noSearchHelpPopUp);
+		// 	this.handleValueHelpRequestId();
+		// 	this.handleValueHelpStaffId();
+		// 	//				
+		// 	}.bind(this));
+		// },
 		_fetchLoggedInUserPhoto: function () {
 			//fetch photo
 			var that = this;
@@ -119,69 +121,120 @@ sap.ui.define([
 		// 	}
 		// },
 
-		generateTokenForLoggedInUser: function () {
+		// generateTokenForLoggedInUser: function () {
+		// 	// this._fnLoadMetaData();
 
-			services.fetchLoggedUserToken(this, function (oRetData) {
-				this.AppModel.setProperty("/token", oRetData.token);
-				// this.AppModel.setProperty("/loggedInUserInfo", oRetData.userDetails[0]);
-				// this.AppModel.setProperty("/loggedInUserStfNumber", oRetData.staffInfo.primaryAssignment.STF_NUMBER);
-				// this.AppModel.setProperty("/loggedInUserSfStfNumber", oRetData.staffInfo.primaryAssignment.SF_STF_NUMBER);
-				// //to incorporate primary and secondary assignments(concurrent case ULU and FDLUs)	
-				// this.AppModel.setProperty("/primaryAssigment", oRetData.staffInfo.primaryAssignment);
-				// this.AppModel.setProperty("/otherAssignments", oRetData.staffInfo.otherAssignments);
-				this.AppModel.setProperty("/claimAuthorizations", oRetData.staffInfo.claimAuthorizations);
-				this.AppModel.setProperty("/approverMatrix", oRetData.staffInfo.approverMatrix);
-			
-				var aListOfGroups = [];
-				if (oRetData.staffInfo.approverMatrix.length) {
-					for (var i = 0; i < oRetData.staffInfo.approverMatrix.length; i++) {
-						//addition of code to incorporate Super Admin as well from Approver matrix
-						if (oRetData.staffInfo.approverMatrix[i].STAFF_USER_GRP === 'MATRIX_ADMIN' &&
-						oRetData.staffInfo.approverMatrix[i].PROCESS_CODE === '100') {
-							this.AppModel.setProperty("/userRoleGrp", 'NUS_CHRS_ECLAIMS_SUPER_ADMIN'); //Super Admin
-						}
-						//
-						var oGroups = oRetData.staffInfo.approverMatrix[i];
-						if (aListOfGroups.indexOf(oGroups.STAFF_USER_GRP) < 0) {
-							aListOfGroups.push(oGroups.STAFF_USER_GRP);
-						}
-					}
-					// if (aListOfGroups.length === 1) {
-					// 	this.AppModel.setProperty("/userRoleGrp", aListOfGroups[0]); //claimant
-					// 	// if (aListOfGroups[0] === "NUS_CHRS_ECLAIMS_APPROVER") {
-					// 	if (aListOfGroups[0] === "APPROVER" || aListOfGroups[0] === "ADDITIONAL_APP_1" || aListOfGroups[0] === "ADDITIONAL_APP_2") {
-					// 		this.AppModel.setProperty("/visibility/actionColumn", true);
-					// 	}
-					// } else {
-					// 	this.AppModel.setProperty("/userRoleGrp", "NUS_CHRS_ECLAIMS_ESS"); //claimant
-					// }
-				} else {
-					this.AppModel.setProperty("/userRole", "ESS"); // claimant 
-					this.AppModel.setProperty("/userRoleGrp", "NUS_CHRS_ECLAIMS_ESS"); //claimant
-				}
-				//commented the below code as Super Admin basically Matrix admin will be derived from Approver matrix and not from IAS 
-				//	Check for SUPER ADMIN role
-				// for (var i = 0; i < oRetData.userDetails[0].groups.length; i++) {
-				// 	var oGroups = oRetData.userDetails[0].groups[i];
-				// 	if (oGroups.value === "NUS_CHRS_ECLAIMS_SUPER_ADMIN") {
-				// 		this.AppModel.setProperty("/userRoleGrp", oGroups.value); //Super Admin
-				// 		break;
-				// 	}
-				// }
+		// 	services.fetchLoggedUserToken(this, function (oRetData) {
+		// 		this.AppModel.setProperty("/token", oRetData.token);
+		// 		// this.AppModel.setProperty("/loggedInUserInfo", oRetData.userDetails[0]);
+		// 		// this.AppModel.setProperty("/loggedInUserStfNumber", oRetData.staffInfo.primaryAssignment.STF_NUMBER);
+		// 		// this.AppModel.setProperty("/loggedInUserSfStfNumber", oRetData.staffInfo.primaryAssignment.SF_STF_NUMBER);
+		// 		// //to incorporate primary and secondary assignments(concurrent case ULU and FDLUs)	
+		// 		// this.AppModel.setProperty("/primaryAssigment", oRetData.staffInfo.primaryAssignment);
+		// 		// this.AppModel.setProperty("/otherAssignments", oRetData.staffInfo.otherAssignments);
+		// 		this.AppModel.setProperty("/claimAuthorizations", oRetData.staffInfo.claimAuthorizations);
+		// 		this.AppModel.setProperty("/approverMatrix", oRetData.staffInfo.approverMatrix);
 
-				this._fnLoadMetaData();
+		// 		var aListOfGroups = [];
+		// 		if (oRetData.staffInfo.approverMatrix.length) {
+		// 			for (var i = 0; i < oRetData.staffInfo.approverMatrix.length; i++) {
+		// 				//addition of code to incorporate Super Admin as well from Approver matrix
+		// 				if (oRetData.staffInfo.approverMatrix[i].STAFF_USER_GRP === 'MATRIX_ADMIN' &&
+		// 				oRetData.staffInfo.approverMatrix[i].PROCESS_CODE === '100') {
+		// 					this.AppModel.setProperty("/userRoleGrp", 'NUS_CHRS_ECLAIMS_SUPER_ADMIN'); //Super Admin
+		// 				}
+		// 				//
+		// 				var oGroups = oRetData.staffInfo.approverMatrix[i];
+		// 				if (aListOfGroups.indexOf(oGroups.STAFF_USER_GRP) < 0) {
+		// 					aListOfGroups.push(oGroups.STAFF_USER_GRP);
+		// 				}
+		// 			}
+		// 			// if (aListOfGroups.length === 1) {
+		// 			// 	this.AppModel.setProperty("/userRoleGrp", aListOfGroups[0]); //claimant
+		// 			// 	// if (aListOfGroups[0] === "NUS_CHRS_ECLAIMS_APPROVER") {
+		// 			// 	if (aListOfGroups[0] === "APPROVER" || aListOfGroups[0] === "ADDITIONAL_APP_1" || aListOfGroups[0] === "ADDITIONAL_APP_2") {
+		// 			// 		this.AppModel.setProperty("/visibility/actionColumn", true);
+		// 			// 	}
+		// 			// } else {
+		// 			// 	this.AppModel.setProperty("/userRoleGrp", "NUS_CHRS_ECLAIMS_ESS"); //claimant
+		// 			// }
+		// 		} else {
+		// 			this.AppModel.setProperty("/userRole", "ESS"); // claimant 
+		// 			this.AppModel.setProperty("/userRoleGrp", "NUS_CHRS_ECLAIMS_ESS"); //claimant
+		// 		}
+		// 		//commented the below code as Super Admin basically Matrix admin will be derived from Approver matrix and not from IAS 
+		// 		//	Check for SUPER ADMIN role
+		// 		// for (var i = 0; i < oRetData.userDetails[0].groups.length; i++) {
+		// 		// 	var oGroups = oRetData.userDetails[0].groups[i];
+		// 		// 	if (oGroups.value === "NUS_CHRS_ECLAIMS_SUPER_ADMIN") {
+		// 		// 		this.AppModel.setProperty("/userRoleGrp", oGroups.value); //Super Admin
+		// 		// 		break;
+		// 		// 	}
+		// 		// }
 
+		// 		this._fnLoadMetaData();
+
+		// 	}.bind(this));
+
+		// },
+
+		onLoadInitialServices: function () {
+			var oUtilModel = this.getOwnerComponent().getModel(),
+				oCatalogModel = this.getOwnerComponent().getModel("Catalog"),
+				oUserServicePromises = new Promise(function (resolve, reject) {
+					oUtilModel.metadataLoaded().then(function () {
+						this.getUserDetails(resolve, reject);
+					}.bind(this));
+				}.bind(this));
+			oUserServicePromises.then(function (resolve, reject) {
+				oCatalogModel.metadataLoaded().then(function () {
+					this.handleValueHelpStatus();
+					var noSearchHelpPopUp = 'Y';
+					this.handleValueHelpUlu(noSearchHelpPopUp);
+					this.handleValueHelpFdlu(noSearchHelpPopUp);
+					this.handleValueHelpRequestId();
+					this.handleValueHelpStaffId();
+				}.bind(this));
 			}.bind(this));
-
 		},
 
+		getUserDetails: function (resolve, reject) {
+			var oUtilModel = this.getOwnerComponent().getModel();
+			oUtilModel.read("/getUserDetails", {
+				success: function (oRetData) {
+					this.AppModel.setProperty("/claimAuthorizations", oRetData.getUserDetails.staffInfo.claimAuthorizations);
+					this.AppModel.setProperty("/approverMatrix", oRetData.getUserDetails.staffInfo.approverMatrix);
+					var aListOfGroups = [];
+					if (oRetData.getUserDetails.staffInfo.approverMatrix.length) {
+						for (var i = 0; i < oRetData.getUserDetails.staffInfo.approverMatrix.length; i++) {
+							//addition of code to incorporate Super Admin as well from Approver matrix
+							if (oRetData.getUserDetails.staffInfo.approverMatrix[i].STAFF_USER_GRP === 'MATRIX_ADMIN' &&
+								oRetData.getUserDetails.staffInfo.approverMatrix[i].PROCESS_CODE === '100') {
+								this.AppModel.setProperty("/userRoleGrp", 'NUS_CHRS_ECLAIMS_SUPER_ADMIN'); //Super Admin
+							}
+							//
+							var oGroups = oRetData.getUserDetails.staffInfo.approverMatrix[i];
+							if (aListOfGroups.indexOf(oGroups.STAFF_USER_GRP) < 0) {
+								aListOfGroups.push(oGroups.STAFF_USER_GRP);
+							}
+						}
+					} else {
+						this.AppModel.setProperty("/userRole", "ESS"); // claimant 
+						this.AppModel.setProperty("/userRoleGrp", "NUS_CHRS_ECLAIMS_ESS"); //claimant
+					}
+					resolve();
+				}.bind(this), error: function (oError) {
+					reject();
+				}
+			});
+		},
 		//////////////////////////////////////////////////////////////////////////////////////////		
 		//new logic for the reports
 		//////////////////////////////////////////////////////////////////////////////////////////
 
 		//value help for Claim No.
 		handleValueHelpRequestId: function (oEvent) {
-			var oDataModel = this.getOwnerComponent().getModel("EclaimSrvModel");
+			var oDataModel = this.getOwnerComponent().getModel("Catalog");
 			var aFilter = [];
 			var orFilter = [];
 			var andFilter = [];
@@ -201,7 +254,7 @@ sap.ui.define([
 				}
 			}
 
-			aFilter.push(new sap.ui.model.Filter("STATUS_CODE", sap.ui.model.FilterOperator.NE, '01'));
+			aFilter.push(new sap.ui.model.Filter("REQUEST_STATUS", sap.ui.model.FilterOperator.NE, '01'));
 
 			// var uluList = this.AppModel.getProperty("/claimRequest/UluList");
 			// if (uluList) {
@@ -217,7 +270,7 @@ sap.ui.define([
 			//var filters = this.generateFilter('CLAIM_TYPE_C', '1', sap.ui.model.FilterOperator.StartsWith);
 			if (userRoleGrp === "NUS_CHRS_ECLAIMS_SUPER_ADMIN" || (!!claimAuthorizations && claimAuthorizations.length > 0)) {
 				var that = this;
-				oDataModel.read("/EclaimRequestViews", {
+				oDataModel.read("/eclaims_data", {
 					//select: "REQUEST_ID",
 					//parameters: {select: "REQUEST_ID"}
 					filters: aFilter,
@@ -264,7 +317,7 @@ sap.ui.define([
 			var selectedItemsClaimNo = oEvent.getParameter("selectedItems");
 			this.AppModel.setProperty("/claimRequest/selectedItemsClaimNo", selectedItemsClaimNo);
 		},
-		
+
 		handleConfirmRequestId: function (oEvent) {
 			this.getUIControl("inpClaimNoValueHelp").removeAllTokens();
 			var aContexts = oEvent.getParameter("selectedContexts");
@@ -282,7 +335,7 @@ sap.ui.define([
 		},
 
 		handleSearchRequestId: function (oEvent) {
-			
+
 			var oDataModel = this.getOwnerComponent().getModel("EclaimSrvModel");
 			//var uluFdluFilter;// = [];
 			var orFilter = [];
@@ -366,7 +419,7 @@ sap.ui.define([
 
 		//value help for ULU 
 		handleValueHelpUlu: function (NoSearchHelpPopUp) {
-		
+
 			var claimAuthorizations = this.AppModel.getProperty("/claimAuthorizations");
 			// if (claimAuthorizations.length === 1) {
 			// 	this.AppModel.setProperty("/uluSelected", claimAuthorizations[0].ULU_T);
@@ -379,7 +432,7 @@ sap.ui.define([
 
 			var userRoleGrp = this.AppModel.getProperty("/userRoleGrp"); //Super Admin
 			if (userRoleGrp === "NUS_CHRS_ECLAIMS_SUPER_ADMIN") {
-				var oDataModel = this.getOwnerComponent().getModel("EclaimSrvModel");
+				var oDataModel = this.getOwnerComponent().getModel();
 				var aFilters = [];
 
 				var that = this;
@@ -388,7 +441,7 @@ sap.ui.define([
 					filters: aFilters,
 					success: function (oData) {
 						if (oData) {
-						
+
 							//	that.AppModel.setProperty("/claimRequest/claimsList", oData.getProperty("/"));
 							that.AppModel.setProperty("/claimAuthorizations", oData.results);
 							for (var i = 0; i < oData.results.length; i++) {
@@ -536,7 +589,7 @@ sap.ui.define([
 					filters: [filtersUluGrp],
 					success: function (oData) {
 						if (oData) {
-							
+
 							//	that.AppModel.setProperty("/claimRequest/claimsList", oData.getProperty("/"));
 							that.AppModel.setProperty("/claimAuthorizations", oData.results);
 							for (var i = 0; i < oData.results.length; i++) {
@@ -645,7 +698,7 @@ sap.ui.define([
 		},
 
 		handleValueHelpFdlu: function (NoSearchHelpPopUp) {
-			
+
 			var claimAuthorizations = this.AppModel.getProperty("/claimAuthorizations");
 			var selectedItemsUlu = this.getUIControl("inpUluValueHelp").getTokens();
 			// if (claimAuthorizations.length === 1) {
@@ -745,7 +798,7 @@ sap.ui.define([
 		},
 
 		handleConfirmFdlu: function (oEvent) {
-			
+
 			this.getUIControl("inpFdluValueHelp").removeAllTokens();
 			var aContexts = oEvent.getParameter("selectedContexts");
 			if (aContexts && aContexts.length) {
@@ -762,7 +815,7 @@ sap.ui.define([
 		},
 
 		handleSearchFdlu: function (oEvent, NoSearchHelpPopUp) {
-		
+
 			var sValue = oEvent.getParameter("value").toString();
 			var claimAuthorizations = this.AppModel.getProperty("/claimAuthorizations");
 			var selectedItemsUlu = this.getUIControl("inpUluValueHelp").getTokens();
@@ -863,13 +916,13 @@ sap.ui.define([
 		},
 
 		handleSelectionFinishFdlu: function (oEvent) {
-			
+
 			var selectedItems = oEvent.getParameter("selectedItems");
 			this.AppModel.setProperty("/claimRequest/selectedItemsFdlu", selectedItems);
 		},
 
 		handleConfirmUluFdlu: function (oEvent) {
-			
+
 			// reset the filter
 			var oBinding = oEvent.getSource().getBinding("items");
 			oBinding.filter([]);
@@ -893,7 +946,7 @@ sap.ui.define([
 
 		handleValueHelpStatus: function (oEvent) {
 		
-			var oDataModel = this.getOwnerComponent().getModel("EclaimSrvModel");
+			var oDataModel = this.getOwnerComponent().getModel("Catalog");
 			var aFilters = [];
 
 			aFilters.push(new sap.ui.model.Filter("STATUS_TYPE", sap.ui.model.FilterOperator.EQ, 'ECLAIMS'));
@@ -901,7 +954,7 @@ sap.ui.define([
 			//var filters = this.generateFilter('CLAIM_TYPE_C', '1', sap.ui.model.FilterOperator.StartsWith);
 
 			var that = this;
-			oDataModel.read("/StatusConfigs", {
+			oDataModel.read("/statusconfig_data", {
 
 				filters: aFilters,
 				success: function (oData) {
@@ -941,13 +994,13 @@ sap.ui.define([
 		},
 
 		handleSelectionFinishClaimStatus: function (oEvent) {
-		
+
 			var selectedItems = oEvent.getParameter("selectedItems");
 			this.AppModel.setProperty("/claimRequest/selectedItemsClaimStatus", selectedItems);
 		},
 
 		handleConfirmStatus: function (oEvent) {
-			
+
 			var oBinding = oEvent.getSource().getBinding("items");
 			oBinding.filter([]);
 
@@ -968,11 +1021,11 @@ sap.ui.define([
 		},
 
 		handleSearchStatus: function (oEvent) {
-			
+
 		},
 
 		// handleValueHelpStaffId: function (oEvent) {
-		
+
 		// 	var oView = this.getView();
 		// 	//var oButton = oEvent.getSource();
 		// 	var token = this.AppModel.getProperty("/token");
@@ -1010,18 +1063,18 @@ sap.ui.define([
 		// },
 
 		handleSelectionFinishStaffId: function (oEvent) {
-			
+
 			var selectedItemsStaffId = oEvent.getParameter("selectedItems");
 			this.AppModel.setProperty("/claimRequest/selectedItemsStaffId", selectedItemsStaffId);
 		},
 
 		handleValueHelpStaffId: function (oEvent) {
-			var oDataModel = this.getOwnerComponent().getModel("EclaimSrvModel");
+			var oDataModel = this.getOwnerComponent().getModel();
 			//var aFilters = [];
 			var aFilter = [];
 			var orFilter = [];
 			var andFilter = [];
-		
+
 			//	var uluList = this.AppModel.getProperty("/claimRequest/UluList");
 			var userRoleGrp = this.AppModel.getProperty("/userRoleGrp"); //Super Admin
 			if (userRoleGrp !== "NUS_CHRS_ECLAIMS_SUPER_ADMIN") {
@@ -1042,14 +1095,14 @@ sap.ui.define([
 			if (userRoleGrp !== "NUS_CHRS_ECLAIMS_SUPER_ADMIN" || (!!claimAuthorizations && claimAuthorizations.length > 0)) {
 				var that = this;
 				this.showBusyIndicator();
-				oDataModel.read("/ChrsJobInfos", {
+				oDataModel.read("/CHRS_JOB_INFO", {
 					filters: aFilter,
 					urlParameters: {
 						"$select": "STF_NUMBER,FULL_NM"
 					},
 					success: function (oData) {
 						if (oData) {
-						
+
 							that.AppModel.setProperty("/claimRequest/staffLength", oData.results.length);
 							that.AppModel.setProperty("/claimRequest/StaffIdList", oData.results);
 							that.AppModel.setProperty("/claimRequest/originalStaffIdList", oData.results);
@@ -1112,7 +1165,7 @@ sap.ui.define([
 		},
 
 		handleConfirmStaff: function (oEvent) {
-			
+
 			this.getUIControl("inpStaffValueHelp").removeAllTokens();
 			var aContexts = oEvent.getParameter("selectedContexts");
 			if (aContexts && aContexts.length) {
@@ -1241,7 +1294,7 @@ sap.ui.define([
 		},
 
 		onTokenUpdateStaff: function (oEvent) {
-	
+
 			if (oEvent.getParameter("type") === "removed") {
 				this.AppModel.setProperty("/claimRequest/submittedByName", "");
 				this.AppModel.setProperty("/claimRequest/submittedById", "");
@@ -1270,14 +1323,14 @@ sap.ui.define([
 
 		handleValueHelpVerifier: function (oEvent) {
 			var oView = this.getView();
-			var EclaimSrvModel = this.getComponentModel("EclaimSrvModel");
+			var EclaimSrvModel = this.getComponentModel("Catalog");
 			//	var ulu = this.AppModel.getProperty("/claimRequest/createClaimRequest/uluSelectedCode");
 			//	var fdlu = this.AppModel.getProperty("/claimRequest/createClaimRequest/fdluSelectedCode");
 			//var andFilter = [];
 			var aFilter = [];
 			var orFilter = [];
 			var andFilter = [];
-		
+
 			var userRoleGrp = this.AppModel.getProperty("/userRoleGrp"); //Super Admin
 			//	var uluList = this.AppModel.getProperty("/claimRequest/UluList");
 			//	var uluList = this.AppModel.getProperty("/claimRequest/UluList");
@@ -1308,15 +1361,15 @@ sap.ui.define([
 			aFilter.push(new sap.ui.model.Filter("STAFF_USER_GRP", FilterOperator.EQ, ['VERIFIER']));
 			//add the check for validity 
 			var currentDate = new Date();
-			aFilter.push(new sap.ui.model.Filter("APM_VALID_FROM", FilterOperator.LE, currentDate));
-			aFilter.push(new sap.ui.model.Filter("APM_VALID_TO", FilterOperator.GE, currentDate));
+			aFilter.push(new sap.ui.model.Filter("APM_VALID_FROM", FilterOperator.LE, currentDate.toISOString()));
+			aFilter.push(new sap.ui.model.Filter("APM_VALID_TO", FilterOperator.GE, currentDate.toISOString()));
 			//			
 			//aFilter.push(new sap.ui.model.Filter("STAFF_USER_GRP", FilterOperator.EQ, ['VERIFIER']));
 			// andFilter.push(new sap.ui.model.Filter("ULU", FilterOperator.EQ, ulu));
 			// andFilter.push(new sap.ui.model.Filter("FDLU", FilterOperator.EQ, fdlu));
 			//aFilter.push(new sap.ui.model.Filter(andFilter, true));
 			if (userRoleGrp === "NUS_CHRS_ECLAIMS_SUPER_ADMIN" || (!!claimAuthorizations && claimAuthorizations.length > 0)) {
-				EclaimSrvModel.read("/EclaimsApprovalMatrixViews", {
+				EclaimSrvModel.read("/v_approval_maxtrix", {
 					filters: aFilter,
 					success: function (oData) {
 						if (oData.results.length) {
@@ -1392,8 +1445,8 @@ sap.ui.define([
 		},
 
 		handleSearchVerifier: function (oEvent) {
-			
-			var oDataModel = this.getOwnerComponent().getModel("EclaimSrvModel");
+
+			var oDataModel = this.getOwnerComponent().getModel("Catalog");
 			var orFilter = [];
 			var andFilter = [];
 			var sValue = oEvent.getParameter("value").toString();
@@ -1429,8 +1482,8 @@ sap.ui.define([
 			var staffUserGroup = new sap.ui.model.Filter("STAFF_USER_GRP", FilterOperator.EQ, ['VERIFIER']);
 			//add the check for validity 
 			var currentDate = new Date();
-			var validityFromFilter = new sap.ui.model.Filter("APM_VALID_FROM", FilterOperator.LE, currentDate);
-			var validityToFilter = new sap.ui.model.Filter("APM_VALID_TO", FilterOperator.GE, currentDate);
+			var validityFromFilter = new sap.ui.model.Filter("APM_VALID_FROM", FilterOperator.LE, currentDate.toISOString());
+			var validityToFilter = new sap.ui.model.Filter("APM_VALID_TO", FilterOperator.GE, currentDate.toISOString());
 			//		
 			var filtersGrp;
 			if (!!uluFdluFilter) {
@@ -1449,7 +1502,7 @@ sap.ui.define([
 			if (userRoleGrp === "NUS_CHRS_ECLAIMS_SUPER_ADMIN" || (!!claimAuthorizations && claimAuthorizations.length > 0)) {
 				var that = this;
 
-				oDataModel.read("/EclaimsApprovalMatrixViews", {
+				oDataModel.read("/v_approval_maxtrix", {
 					filters: [filtersGrp],
 					// urlParameters: {
 					// 	"$select": "STF_NUMBER,FULL_NM"
@@ -1470,7 +1523,7 @@ sap.ui.define([
 
 		handleValueHelpApprover: function (oEvent) {
 			var oView = this.getView();
-			var EclaimSrvModel = this.getComponentModel("EclaimSrvModel");
+			var EclaimSrvModel = this.getComponentModel("Catalog");
 			var aFilter = [];
 			var orFilter = [];
 			var andFilter = [];
@@ -1490,11 +1543,11 @@ sap.ui.define([
 			aFilter.push(new sap.ui.model.Filter("STAFF_USER_GRP", FilterOperator.EQ, ['APPROVER']));
 			//add the check for validity 
 			var currentDate = new Date();
-			aFilter.push(new sap.ui.model.Filter("APM_VALID_FROM", FilterOperator.LE, currentDate));
-			aFilter.push(new sap.ui.model.Filter("APM_VALID_TO", FilterOperator.GE, currentDate));
+			aFilter.push(new sap.ui.model.Filter("APM_VALID_FROM", FilterOperator.LE, currentDate.toISOString()));
+			aFilter.push(new sap.ui.model.Filter("APM_VALID_TO", FilterOperator.GE, currentDate.toISOString()));
 			//					
 			if (userRoleGrp === "NUS_CHRS_ECLAIMS_SUPER_ADMIN" || (!!claimAuthorizations && claimAuthorizations.length > 0)) {
-				EclaimSrvModel.read("/EclaimsApprovalMatrixViews", {
+				EclaimSrvModel.read("/v_approval_maxtrix", {
 					filters: aFilter,
 					success: function (oData) {
 						if (oData.results.length) {
@@ -1562,8 +1615,8 @@ sap.ui.define([
 			}
 		},
 		handleSearchApprover: function (oEvent) {
-			
-			var oDataModel = this.getOwnerComponent().getModel("EclaimSrvModel");
+
+			var oDataModel = this.getOwnerComponent().getModel("Catalog");
 			var orFilter = [];
 			var andFilter = [];
 			var sValue = oEvent.getParameter("value").toString();
@@ -1599,8 +1652,8 @@ sap.ui.define([
 			var staffUserGroup = new sap.ui.model.Filter("STAFF_USER_GRP", FilterOperator.EQ, ['APPROVER']);
 			//add the check for validity 
 			var currentDate = new Date();
-			var validityFromFilter = new sap.ui.model.Filter("APM_VALID_FROM", FilterOperator.LE, currentDate);
-			var validityToFilter = new sap.ui.model.Filter("APM_VALID_TO", FilterOperator.GE, currentDate);
+			var validityFromFilter = new sap.ui.model.Filter("APM_VALID_FROM", FilterOperator.LE, currentDate.toISOString());
+			var validityToFilter = new sap.ui.model.Filter("APM_VALID_TO", FilterOperator.GE, currentDate.toISOString());
 			//		
 			var filtersGrp;
 			if (!!uluFdluFilter) {
@@ -1619,7 +1672,7 @@ sap.ui.define([
 			if (userRoleGrp === "NUS_CHRS_ECLAIMS_SUPER_ADMIN" || (!!claimAuthorizations && claimAuthorizations.length > 0)) {
 				var that = this;
 
-				oDataModel.read("/EclaimsApprovalMatrixViews", {
+				oDataModel.read("/v_approval_maxtrix", {
 					filters: [filtersGrp],
 					// urlParameters: {
 					// 	"$select": "STF_NUMBER,FULL_NM"
@@ -1643,13 +1696,13 @@ sap.ui.define([
 			if (!!aFilter && aFilter.length > 0) {
 				var oClaimsReqTable = this.getView().byId("idClaimRequestsTable");
 				oClaimsReqTable.bindItems({
-					path: "EclaimSrvModel>/EclaimsItemViews",
+					path: "Eclaims>/v_eclaim_item_view",
 					//	sorter: oSorter,
 					template: this.oTemplate,
 					filters: aFilter
-						// parameters: {
-						// 	expand: "TaskActionConfigViewDetails,RequestLockDetailsDetails"
-						// }
+					// parameters: {
+					// 	expand: "TaskActionConfigViewDetails,RequestLockDetailsDetails"
+					// }
 				});
 			}
 			//else {
@@ -1757,7 +1810,7 @@ sap.ui.define([
 					if (!!selectedItemsUlu && selectedItemsUlu.length > 0) {
 						//andFilter.push(new sap.ui.model.Filter("ULU", FilterOperator.EQ, ulu));
 						if (userRoleGrp === "NUS_CHRS_ECLAIMS_SUPER_ADMIN" && this.AppModel.getProperty("/claimRequest/UluList").length ===
-							selectedItemsUlu.length) {} else {
+							selectedItemsUlu.length) { } else {
 							var orFilter = [];
 							for (var i = 0; i < selectedItemsUlu.length; i++) {
 								orFilter.push(new sap.ui.model.Filter("ULU", FilterOperator.EQ, selectedItemsUlu[i].getProperty("key")));
@@ -1887,7 +1940,7 @@ sap.ui.define([
 					//handling is deleted flag
 					andFilter.push(new sap.ui.model.Filter("IS_DELETED", FilterOperator.EQ, "N"));
 					//Only for PTT Claim Types
-						andFilter.push(new sap.ui.model.Filter("PROCESS_CODE", FilterOperator.EQ, "101"));
+					andFilter.push(new sap.ui.model.Filter("PROCESS_CODE", FilterOperator.EQ, "101"));
 
 					if (andFilter.length) {
 						aFilter.push(new sap.ui.model.Filter(andFilter, true));
@@ -1915,7 +1968,7 @@ sap.ui.define([
 							this._fnHandleDataToExport(oData.results);
 						}
 					}.bind(this),
-					error: function (oError) {}
+					error: function (oError) { }
 				});
 			}
 			// else {
@@ -1945,153 +1998,153 @@ sap.ui.define([
 		},
 		createColumnConfig: function () {
 			return [{
-					label: 'Claim No',
-					property: 'REQUEST_ID'
-				}, {
-					label: 'Year',
-					property: 'CLAIM_YEAR'
-				}, {
-					label: 'Claim Month',
-					property: 'CLAIM_MONTH'
-				}, {
-					label: 'Claim Type',
-					property: 'CLAIM_TYPE_T'
-				}, {
-					label: 'Claim Status',
-					property: 'STATUS_ALIAS'
-				}, {
-					label: 'Staff Number',
-					property: 'STAFF_ID'
-				}, {
-					label: 'Staff Name',
-					property: 'FULL_NM'
-				},
-				//{
-				// 	label: 'ULU',
-				// 	property: ['CLAIM_MONTH', 'CLAIM_YEAR'],
-				// 	template: '{0} / {1}'
-				// }, 
-				{
-					label: 'ULU Code',
-					property: 'ULU'
-				}, {
-					label: 'ULU Name',
-					property: 'ULU_T'
-				}, {
-					label: 'FDLU Code',
-					property: 'FDLU_C'
-				}, {
-					label: 'FDLU Name',
-					property: 'FDLU_T'
-				}, {
-					label: 'Employee Group',
-					property: 'EMP_GP_T'
-				}, {
-					label: 'Date Joined',
-					property: 'DATE_JOINED',
-					type: EdmType.Date
-						// type: EdmType.Number,
-						// scale: 2
-				}, {
-					label: 'Rate Type',
-					property: 'RATE_DESC'
-				}, {
-					label: 'Start Date',
-					property: 'CLAIM_START_DATE'
-						//	inputformat: "yyyy-mm-dd",
-						//	type: sap.ui.export.EdmType.Date
-				}, {
-					label: 'End Date',
-					property: 'CLAIM_END_DATE'
-						//inputformat: "yyyy-mm-dd",
-						//type: sap.ui.export.EdmType.Date
-				}, {
-					label: 'Day',
-					property: 'CLAIM_DAY'
-				}, {
-					label: 'Start Time',
-					property: 'START_TIME'
-				}, {
-					label: 'End Time',
-					property: 'END_TIME'
-				}, {
-					label: 'Hours/Unit',
-					property: 'HOURS_UNIT'
-				}, {
-					label: 'Rate Amount',
-					property: 'RATE_TYPE_AMOUNT'
-				}, {
-					label: 'Total Amount',
-					property: 'TOTAL_AMOUNT'
-				}, {
-					label: 'WBS',
-					property: 'WBS'
-				}, {
-					label: 'Claim Item Remarks',
-					property: 'REMARKS'
-				}, {
-					label: 'Submitted on',
-					property: 'SUBMITTED_ON',
-					type: EdmType.Date
-				}, {
-					label: 'Submitted by',
-					property: 'SUBMITTED_BY'
-				}, {
-					label: 'Verified on',
-					property: 'VERIFIED_ON',
-					type: EdmType.Date
-				}, {
-					label: 'Verified Staff ID',
-					property: 'VERIFIER_STAFF_ID'
-				}, {
-					label: 'Verified By',
-					property: 'VERIFIER_STAFF_FULL_NAME'
-				}, {
-					label: 'AP1 Staff ID',
-					property: 'ADD_APP_1_STAFF_ID'
-				}, {
-					label: 'Additional Approver 1',
-					property: 'ADD_APP_1_STAFF_FULL_NAME'
-				}, {
-					label: 'Additional Appr 1 approved on',
-					property: 'ADD_APRV_1_ON',
-					type: EdmType.Date
-				}, {
-					label: 'AP2 Staff ID',
-					property: 'ADDITIONAL_APP_2_STAFF_ID'
-				}, {
-					label: 'Additional Approver 2',
-					property: 'ADDITIONAL_APP_2_STAFF_FULL_NAME'
-				}, {
-					label: 'Additional Appr 2 approved on',
-					property: 'ADD_APRV_2_ON',
-					type: EdmType.Date
-				}, {
-					label: 'Approved on',
-					property: 'APPROVED_ON',
-					type: EdmType.Date
-				}, {
-					label: 'Approver Staff ID',
-					property: 'APPROVED_BY'
-				}, {
-					label: 'Approved by',
-					property: 'APPROVER_STAFF_FULL_NAME'
-				}, {
-					label: 'CA Remarks',
-					property: 'CA_REMARKS'
-				}, {
-					label: 'Verifier Remarks',
-					property: 'VERIFIER_REMARKS'
-				}, {
-					label: 'Approver Remarks',
-					property: 'APP_REMARKS'
-				}
+				label: 'Claim No',
+				property: 'REQUEST_ID'
+			}, {
+				label: 'Year',
+				property: 'CLAIM_YEAR'
+			}, {
+				label: 'Claim Month',
+				property: 'CLAIM_MONTH'
+			}, {
+				label: 'Claim Type',
+				property: 'CLAIM_TYPE_T'
+			}, {
+				label: 'Claim Status',
+				property: 'STATUS_ALIAS'
+			}, {
+				label: 'Staff Number',
+				property: 'STAFF_ID'
+			}, {
+				label: 'Staff Name',
+				property: 'FULL_NM'
+			},
+			//{
+			// 	label: 'ULU',
+			// 	property: ['CLAIM_MONTH', 'CLAIM_YEAR'],
+			// 	template: '{0} / {1}'
+			// }, 
+			{
+				label: 'ULU Code',
+				property: 'ULU'
+			}, {
+				label: 'ULU Name',
+				property: 'ULU_T'
+			}, {
+				label: 'FDLU Code',
+				property: 'FDLU_C'
+			}, {
+				label: 'FDLU Name',
+				property: 'FDLU_T'
+			}, {
+				label: 'Employee Group',
+				property: 'EMP_GP_T'
+			}, {
+				label: 'Date Joined',
+				property: 'DATE_JOINED',
+				type: EdmType.Date
+				// type: EdmType.Number,
+				// scale: 2
+			}, {
+				label: 'Rate Type',
+				property: 'RATE_DESC'
+			}, {
+				label: 'Start Date',
+				property: 'CLAIM_START_DATE'
+				//	inputformat: "yyyy-mm-dd",
+				//	type: sap.ui.export.EdmType.Date
+			}, {
+				label: 'End Date',
+				property: 'CLAIM_END_DATE'
+				//inputformat: "yyyy-mm-dd",
+				//type: sap.ui.export.EdmType.Date
+			}, {
+				label: 'Day',
+				property: 'CLAIM_DAY'
+			}, {
+				label: 'Start Time',
+				property: 'START_TIME'
+			}, {
+				label: 'End Time',
+				property: 'END_TIME'
+			}, {
+				label: 'Hours/Unit',
+				property: 'HOURS_UNIT'
+			}, {
+				label: 'Rate Amount',
+				property: 'RATE_TYPE_AMOUNT'
+			}, {
+				label: 'Total Amount',
+				property: 'TOTAL_AMOUNT'
+			}, {
+				label: 'WBS',
+				property: 'WBS'
+			}, {
+				label: 'Claim Item Remarks',
+				property: 'REMARKS'
+			}, {
+				label: 'Submitted on',
+				property: 'SUBMITTED_ON',
+				type: EdmType.Date
+			}, {
+				label: 'Submitted by',
+				property: 'SUBMITTED_BY'
+			}, {
+				label: 'Verified on',
+				property: 'VERIFIED_ON',
+				type: EdmType.Date
+			}, {
+				label: 'Verified Staff ID',
+				property: 'VERIFIER_STAFF_ID'
+			}, {
+				label: 'Verified By',
+				property: 'VERIFIER_STAFF_FULL_NAME'
+			}, {
+				label: 'AP1 Staff ID',
+				property: 'ADD_APP_1_STAFF_ID'
+			}, {
+				label: 'Additional Approver 1',
+				property: 'ADD_APP_1_STAFF_FULL_NAME'
+			}, {
+				label: 'Additional Appr 1 approved on',
+				property: 'ADD_APRV_1_ON',
+				type: EdmType.Date
+			}, {
+				label: 'AP2 Staff ID',
+				property: 'ADDITIONAL_APP_2_STAFF_ID'
+			}, {
+				label: 'Additional Approver 2',
+				property: 'ADDITIONAL_APP_2_STAFF_FULL_NAME'
+			}, {
+				label: 'Additional Appr 2 approved on',
+				property: 'ADD_APRV_2_ON',
+				type: EdmType.Date
+			}, {
+				label: 'Approved on',
+				property: 'APPROVED_ON',
+				type: EdmType.Date
+			}, {
+				label: 'Approver Staff ID',
+				property: 'APPROVED_BY'
+			}, {
+				label: 'Approved by',
+				property: 'APPROVER_STAFF_FULL_NAME'
+			}, {
+				label: 'CA Remarks',
+				property: 'CA_REMARKS'
+			}, {
+				label: 'Verifier Remarks',
+				property: 'VERIFIER_REMARKS'
+			}, {
+				label: 'Approver Remarks',
+				property: 'APP_REMARKS'
+			}
 
 			];
 		},
 
 		onClear: function () {
-			
+
 			this.AppModel.setProperty("/claimRequest/selectedItemsClaimStatus", '');
 			this.getUIControl("inpClaimStatus").removeAllSelectedItems();
 			// this.AppModel.setProperty("/claimRequest/statusList/STATUS_CODE", '');

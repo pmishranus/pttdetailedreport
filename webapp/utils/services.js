@@ -9,25 +9,28 @@ sap.ui.define([
 
 		fetchLoggedUserToken: function (sThis, callBackFx) {
 			var that = this;
-			var userModel = new sap.ui.model.json.JSONModel();
-			userModel.loadData("/services/userapi/currentUser", null, false);
-			sap.ui.getCore().setModel(userModel, "userapi");
-			userModel.dataLoaded().then(function () {
-				var sUserName = sap.ui.getCore().getModel("userapi").getData().name;
-				//sUserName = "PTT_VF1"; //VERFIER
-				 sUserName = "UID53713"; //CA
-				sThis.AppModel.setProperty("/loggedInUserId", sUserName);
-				that._getUserDetails(sThis, that, sUserName, callBackFx);
-			}.bind(sThis));
+			// var userModel = new sap.ui.model.json.JSONModel();
+			// userModel.loadData("/user-api/currentUser", null, false);
+			// sap.ui.getCore().setModel(userModel, "userapi");
+			// userModel.dataLoaded().then(function () {
+			// 	debugger;
+			// 	var sUserName = sap.ui.getCore().getModel("userapi").getData().name;
+			// 	//sUserName = "PTT_VF1"; //VERFIER
+				//  sUserName = "UID53713"; //CA
+			// 	sThis.AppModel.setProperty("/loggedInUserId", sUserName);
+			// 	that._getUserDetails(sThis, that, sUserName, callBackFx);
+			// }.bind(sThis));
+			// this._getUserDetails(sThis, that, callBackFx);
+			this.getUserInfoDetails()
 		},
 
-		_getUserDetails: function (sThis, that, sUserName, callBackFx) {
+		_getUserDetails: function (sThis, that, callBackFx) {
 			var oHeaders = {
                     "Content-Type": "application/json"
                 };
-                var oPayload = {
-                    "userName": sUserName
-                };
+                // var oPayload = {
+                //     "userName": sUserName
+                // };
 			var sUrl = Config.dbOperations.eclaimAuthToken;
 			var authModel = new JSONModel();
 			authModel.loadData(sUrl, JSON.stringify(oPayload), null, "POST", false, false,oHeaders);
@@ -54,12 +57,13 @@ sap.ui.define([
 		},
 
 
-		getUserInfoDetails: function (userToken) {
+		getUserInfoDetails: function () {
+			debugger;
 			var userInfoModel = new JSONModel();
 			var oHeaders = {
 				"Accept": "application/json",
-				"Authorization": "Bearer" + " " + userToken,
-				"AccessPoint": "A",
+				// "Authorization": "Bearer" + " " + userToken,
+				// "AccessPoint": "A",
 				"Content-Type": "application/json"
 			};
 			userInfoModel.loadData(Config.dbOperations.userDetails, null, false, "GET", false, false, oHeaders);
