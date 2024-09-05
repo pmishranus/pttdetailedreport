@@ -1,0 +1,24 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<TableSelectDialog noDataText="No Data Found" title="Select Status" search=".handleSearchStatus" confirm=".handleConfirmStatus"
+		contentHeight="auto" contentWidth="40%" cancel=".handleCloseUluFdlu"
+		items="{ path : 'AppModel>/claimRequest/statusList' }">
+		<ColumnListItem vAlign="Middle">
+			<cells>
+				<Text text="{AppModel>STATUS_CODE}"/>
+				<Text text="{AppModel>STATUS_ALIAS}"/>
+			</cells>
+		</ColumnListItem>
+		<columns>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<header>
+					<Text text="Status Code"/>
+				</header>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<header>
+					<Text text="Status Desc"/>
+				</header>
+			</Column>
+		</columns>
+	</TableSelectDialog>
+</core:FragmentDefinition>

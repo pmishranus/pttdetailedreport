@@ -1,0 +1,24 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<TableSelectDialog noDataText="No Data Found" title="Select ULU" search=".handleSearchUlu" confirm=".handleConfirmUlu"
+		contentHeight="auto" contentWidth="40%" cancel=".handleCloseUlu" multiSelect="true" growingThreshold="200"
+		items="{ path : 'AppModel>/claimRequest/UluList', sorter : { path : 'ULU_T', descending : true } }">
+		<ColumnListItem vAlign="Middle">
+			<cells>
+				<Text text="{AppModel>ULU_C}"/>
+				<Text text="{AppModel>ULU_T}"/>
+			</cells>
+		</ColumnListItem>
+		<columns>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<header>
+					<Text text="ULU Code"/>
+				</header>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<header>
+					<Text text="ULU Name"/>
+				</header>
+			</Column>
+		</columns>
+	</TableSelectDialog>
+</core:FragmentDefinition>

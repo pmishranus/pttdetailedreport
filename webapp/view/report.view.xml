@@ -1,0 +1,14 @@
+<mvc:View controllerName="nus.edu.sg.pttdetailedreport.controller.report" xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" displayBlock="true" xmlns="sap.m">
+	<Shell id="shell">
+		<App id="app">
+			<pages>
+				<Page id="page" showHeader="false" title="{i18n>title}">
+					<content>
+						<core:Fragment fragmentName="nus.edu.sg.pttdetailedreport.view.subview.Report.Filter" type="XML"/>
+						<core:Fragment fragmentName="nus.edu.sg.pttdetailedreport.view.subview.Report.Table" type="XML"/>						
+					</content>
+				</Page>
+			</pages>
+		</App>
+	</Shell>
+</mvc:View>

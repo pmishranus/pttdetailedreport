@@ -1,0 +1,212 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
+	xmlns:main="sap.ui.webc.main" xmlns:core="sap.ui.core">
+	<HBox>
+		<!--<VBox width="6%" class="loggedInUserPhotoStyle sapUiContentPadding">-->
+		<!--	<Avatar displaySize="S" displayShape="Circle" press="onPressLoggedInUserPhoto" src="{AppModel>/staffPhoto}" badgeIcon="sap-icon://display"-->
+		<!--		badgeTooltip="Julie Armstrong"/>-->
+		<!--</VBox>-->
+		<VBox width="100%">
+			<fb:FilterBar showFilterConfiguration="true" useToolbar="false" id="planningFilterBar" clear="onClear" search="onSearch"
+				showClearOnFB="true" class="sapUiNoMargin sapUiNoContentPadding">
+				<fb:filterGroupItems>
+					<fb:FilterGroupItem groupName="__$INTERNAL$" name="ClaimStatus" label="Claim Status" labelTooltip="Claim Status" visibleInFilterBar="true">
+						<fb:control>
+							<!--<Input type="Text" width="100%" placeholder="Select Claim Status" showValueHelp="true" valueHelpIconSrc="sap-icon://value-help"-->
+							<!--	value="{AppModel>/status}" valueHelpRequest="handleValueHelpStatus"></Input>-->
+							<MultiComboBox id="inpClaimStatus" showSecondaryValues="true" selectionChange="handleSelectionChangeClaimStatus"
+								selectionFinish="handleSelectionFinishClaimStatus" width="350px"
+								items="{ path: 'AppModel>/claimRequest/statusList', sorter: { path: 'STATUS_CODE' } }">
+								<core:ListItem key="{AppModel>STATUS_CODE}" text="{AppModel>STATUS_ALIAS}" additionalText=""/>
+							</MultiComboBox>
+						</fb:control>
+					</fb:FilterGroupItem>
+					<fb:FilterGroupItem groupName="__$INTERNAL$" name="StaffID" label="Staff ID" labelTooltip="Staff ID" visibleInFilterBar="true">
+						<fb:control>
+							<!--						<l:VerticalLayout-->
+							<!--class="sapUiContentPadding"-->
+							<!--width="100%">-->
+							<!--<Input type="Text" width="100%" placeholder="Select Staff ID" showValueHelp="true" valueHelpIconSrc="sap-icon://value-help"-->
+							<!--	value="{AppModel>/submittedByName}" valueHelpRequest="handleValueHelpStaffId"></Input>-->
+							<!--<MultiComboBox id="staffhelpid" showSecondaryValues= "true" selectionChange="handleSelectionChangeStaffId" selectionFinish="handleSelectionFinishStaffId" width="350px"-->
+							<!--	items="{path : 'AppModel>/claimRequest/StaffIdList', length: { path : 'AppModel>/claimRequest/staffLength'} }">-->
+							<!--	<core:ListItem key="{AppModel>STF_NUMBER}" text="{AppModel>FULL_NM}" additionalText="{AppModel>STF_NUMBER}"/>-->
+							<!--</MultiComboBox>-->
+							<!--<MultiInput width="40%" id="multiInput" suggestionItems="{ path : 'AppModel>/claimRequest/StaffIdList' }"-->
+							<!--	valueHelpRequest="handleValueHelpStaffId">-->
+							<!--	<core:Item key="{AppModel>STF_NUMBER}" text="{AppModel>FULL_NM}"/>-->
+							<!--</MultiInput>-->
+							<MultiInput width="40%" id="inpStaffValueHelp" suggestionRows="{ path : 'AppModel>/claimRequest/StaffIdList' }"
+								valueHelpRequest="openStaffIdValueHelpPopUp" tokenUpdate="onTokenUpdateStaff">
+								<tokens></tokens>
+								<suggestionColumns>
+									<Column>
+										<Label text="Staff ID"/>
+									</Column>
+									<Column>
+										<Label text="Full Name"/>
+									</Column>
+								</suggestionColumns>
+								<suggestionRows>
+									<ColumnListItem>
+										<Label text="{AppModel>STF_NUMBER}"/>
+										<Label text="{AppModel>FULL_NM}"/>
+									</ColumnListItem>
+								</suggestionRows>
+							</MultiInput>
+							<!--</l:VerticalLayout>-->
+						</fb:control>
+					</fb:FilterGroupItem>
+					<fb:FilterGroupItem groupName="__$INTERNAL$" name="Claim Number" label="Claim Number" labelTooltip="Claim Number" visibleInFilterBar="true">
+						<fb:control>
+							<!--<Input type="Text" width="100%" placeholder="Select Claim Number" showValueHelp="true" valueHelpIconSrc="sap-icon://value-help"-->
+							<!--	value="{AppModel>/requestId}" valueHelpRequest="handleValueHelpRequestId"></Input>-->
+							<!--<MultiComboBox selectionChange="handleSelectionChangeClaimNo" selectionFinish="handleSelectionFinishClaimNo" width="350px"-->
+							<!--	items="{ path: 'AppModel>/claimRequest/ClaimNoList', length: '2000', sorter: { path: 'REQUEST_ID' } }">-->
+							<!--	<core:Item key="{AppModel>REQUEST_ID}" text="{AppModel>REQUEST_ID}"/>-->
+							<!--</MultiComboBox>-->
+							<MultiInput width="40%" id="inpClaimNoValueHelp" suggestionRows="{ path : 'AppModel>/claimRequest/ClaimNoList' }"
+								valueHelpRequest="openClaimNoValueHelpPopUp">
+								<tokens></tokens>
+								<suggestionColumns>
+									<Column>
+										<Label text="Request ID"/>
+									</Column>
+								
+								</suggestionColumns>
+								<suggestionRows>
+									<ColumnListItem>
+										<Label text="{AppModel>REQUEST_ID}"/>
+									
+									</ColumnListItem>
+								</suggestionRows>
+							</MultiInput>			
+						</fb:control>
+					</fb:FilterGroupItem>
+					<fb:FilterGroupItem groupName="__$INTERNAL$" name="ClaimStartMonth" label="Claim Start Month" labelTooltip="" visibleInFilterBar="true">
+						<fb:control>
+							<!--<DatePicker value="{AppModel>/submissionStartDate}"></DatePicker>-->
+							<!--<DatePicker value="{path: 'AppModel>/submissionStartDate', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MMM.yyyy', UTC: true}}" />					-->
+							<Select forceSelection="false" selectedKey="{AppModel>/startMonth}" items="{ path: 'AppModel>/monthList' }" change="onSelectStartMonth">
+								<core:Item key="{AppModel>monthCode}" text="{AppModel>monthName}"/>
+							</Select>
+						</fb:control>
+					</fb:FilterGroupItem>
+					<fb:FilterGroupItem groupName="__$INTERNAL$" name="ClaimEndMonth" label="Claim End Month" labelTooltip="End Date" visibleInFilterBar="true">
+						<fb:control>
+							<!--<DatePicker value="{AppModel>/submissionEndDate}"></DatePicker>-->
+							<!--<DatePicker value="{path: 'AppModel>/submissionEndDate', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MMM.yyyy', UTC: true}}" />								-->
+							<Select forceSelection="false" selectedKey="{AppModel>/endMonth}" items="{ path: 'AppModel>/monthList' }" change="onSelectEndMonth">
+								<core:Item key="{AppModel>monthCode}" text="{AppModel>monthName}"/>
+							</Select>
+						</fb:control>
+					</fb:FilterGroupItem>
+					<fb:FilterGroupItem groupName="__$INTERNAL$" name="SubmissionStartDate" label="Submission Start Date" labelTooltip="Submission Start Date"
+						visibleInFilterBar="true">
+						<fb:control>
+							<!--<DatePicker value="{AppModel>/submissionEndDate}"></DatePicker>-->
+							<!--<DatePicker value="{path: 'AppModel>/submissionStartDate', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MMM.yyyy', UTC: true}}" />							-->
+							<DatePicker
+								value="{path: 'AppModel>/submissionStartDate', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MMM.yyyy', UTC: true}}"/>
+						</fb:control>
+					</fb:FilterGroupItem>
+					<fb:FilterGroupItem groupName="__$INTERNAL$" name="SubmissionEndDate" label="Submission End Date" labelTooltip="Submission End Date"
+						visibleInFilterBar="true">
+						<fb:control>
+							<!--<DatePicker value="{AppModel>/submissionEndDate}"></DatePicker>-->
+							<DatePicker
+								value="{path: 'AppModel>/submissionEndDate', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd.MMM.yyyy', UTC: true}}"/>
+						</fb:control>
+					</fb:FilterGroupItem>
+					<fb:FilterGroupItem groupName="__$INTERNAL$" name="ULU" label="ULU" labelTooltip="" visibleInFilterBar="true">
+						<fb:control>
+							<!--<Input type="Text" width="100%" placeholder="Select ULU" showValueHelp="true" valueHelpIconSrc="sap-icon://value-help"-->
+							<!--	value="{AppModel>/uluSelected}" valueHelpRequest="handleValueHelpUlu"></Input>-->
+							<!--<MultiComboBox showSecondaryValues="true" id="idUlu" selectionChange="handleSelectionChangeUlu" selectionFinish="handleSelectionFinishUlu"-->
+							<!--	width="350px" required="true" items="{ path: 'AppModel>/claimRequest/UluList', length: '5000', sorter: { path: 'ULU_T' } }">-->
+							<!--	<core:ListItem key="{AppModel>ULU_C}" text="{AppModel>ULU_T}" additionalText="{AppModel>ULU_C}"/>-->
+							<!--</MultiComboBox>-->
+							<MultiInput width="40%" id="inpUluValueHelp" suggestionRows="{ path : 'AppModel>/claimRequest/UluList' }"
+								valueHelpRequest="handleValueHelpUlu" tokenUpdate="onTokenUpdateUlu" required="true">
+								<tokens></tokens>
+								<suggestionColumns>
+									<Column>
+										<Label text="ULU Code"/>
+									</Column>
+									<Column>
+										<Label text="ULU Name"/>
+									</Column>
+								</suggestionColumns>
+								<suggestionRows>
+									<ColumnListItem>
+										<Label text="{AppModel>ULU_C}"/>
+										<Label text="{AppModel>ULU_T}"/>
+									</ColumnListItem>
+								</suggestionRows>
+							</MultiInput>							
+						</fb:control>
+					</fb:FilterGroupItem>
+					<fb:FilterGroupItem groupName="__$INTERNAL$" name="FDLU" label="FDLU" labelTooltip="" visibleInFilterBar="true">
+						<fb:control>
+							<!--<Input type="Text" width="100%" placeholder="Select FDLU" showValueHelp="true" valueHelpIconSrc="sap-icon://value-help"-->
+							<!--	value="{AppModel>/fdluSelected}" valueHelpRequest="handleValueHelpFdlu"></Input>-->
+							<!--<MultiComboBox showSecondaryValues="true" id="idFdlu" selectionChange="handleSelectionChangeFdlu"-->
+							<!--	selectionFinish="handleSelectionFinishFdlu" width="350px" items="{ path: 'AppModel>/claimRequest/FdluList', length: '5000', -->
+							<!--	sorter: { path: 'FDLU_T' } }">-->
+							<!--	<core:ListItem key="{AppModel>FDLU_C}" text="{AppModel>FDLU_T}" additionalText="{AppModel>FDLU_C}"/>-->
+							<!--</MultiComboBox>-->
+							<MultiInput width="40%" id="inpFdluValueHelp" suggestionRows="{ path : 'AppModel>/claimRequest/FdluList' }"
+								valueHelpRequest="handleValueHelpFdlu" tokenUpdate="onTokenUpdateFdlu">
+								<tokens></tokens>
+								<suggestionColumns>
+									<Column>
+										<Label text="FDLU Code"/>
+									</Column>
+									<Column>
+										<Label text="FDLU Name"/>
+									</Column>
+								</suggestionColumns>
+								<suggestionRows>
+									<ColumnListItem>
+										<Label text="{AppModel>FDLU_C}"/>
+										<Label text="{AppModel>FDLU_T}"/>
+									</ColumnListItem>
+								</suggestionRows>
+							</MultiInput>														
+						</fb:control>
+					</fb:FilterGroupItem>
+					<fb:FilterGroupItem groupName="__$INTERNAL$" name="RateAmount" label="From Rate Amount" labelTooltip="Rate Amount" visibleInFilterBar="true">
+						<fb:control>
+							<Input type="Text" width="100%" placeholder="Enter Rate Amount" showValueHelp="false" value="{AppModel>/fromRateAmount}"></Input>
+						</fb:control>
+					</fb:FilterGroupItem>
+					<fb:FilterGroupItem groupName="__$INTERNAL$" name="ToRateAmount" label="To Rate Amount" labelTooltip="To Rate Amount"
+						visibleInFilterBar="true">
+						<fb:control>
+							<Input type="Text" width="100%" placeholder="Enter Rate Amount" showValueHelp="false" value="{AppModel>/toRateAmount}"></Input>
+						</fb:control>
+					</fb:FilterGroupItem>
+					<fb:FilterGroupItem groupName="__$INTERNAL$" name="Verifier" label="Verifier" labelTooltip="Verifier" visibleInFilterBar="true">
+						<fb:control>
+							<!--<Input type="Text" width="100%" placeholder="Select Verifier" showValueHelp="true" valueHelpIconSrc="sap-icon://value-help"-->
+							<!--	value="{AppModel>/verifier}" valueHelpRequest="handleValueHelpVerifier"></Input>-->
+							<MultiInput id="inpVerifierValueHelp" maxTokens="1" type="Text" width="100%" placeholder="Select Verifier" showValueHelp="true"
+								valueHelpRequest="handleValueHelpVerifier" tokenUpdate="onTokenUpdateVerifier">
+								<tokens></tokens>
+							</MultiInput>
+						</fb:control>
+					</fb:FilterGroupItem>
+					<fb:FilterGroupItem groupName="__$INTERNAL$" name="Approver" label="Approver" labelTooltip="Approver" visibleInFilterBar="true">
+						<fb:control>
+							<!--<Input type="Text" width="100%" placeholder="Select Approver" showValueHelp="true" valueHelpIconSrc="sap-icon://value-help"-->
+							<!--	value="{AppModel>/approver}" valueHelpRequest="handleValueHelpApprover"></Input>-->
+							<MultiInput id="inpApproverValueHelp" maxTokens="1" type="Text" width="100%" placeholder="Select Approver" showValueHelp="true"
+								valueHelpRequest="handleValueHelpApprover" tokenUpdate="onTokenUpdateApprover">
+								<tokens></tokens>
+							</MultiInput>
+						</fb:control>
+					</fb:FilterGroupItem>
+				</fb:filterGroupItems>
+			</fb:FilterBar>
+		</VBox>
+	</HBox>
+</core:FragmentDefinition>

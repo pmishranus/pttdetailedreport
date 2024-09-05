@@ -1,0 +1,43 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<TableSelectDialog noDataText="No Data Found" title="Select Staff" search=".handleSearchStaff" confirm=".handleConfirmStaff"
+		contentHeight="auto" contentWidth="40%" cancel=".handleCloseStaff" multiSelect="true" growingThreshold="100"
+		items="{ path : 'AppModel>/claimRequest/StaffIdList' }">
+		<ColumnListItem vAlign="Middle">
+			<cells>
+				<!--<ObjectIdentifier title="{AppModel>FULL_NM}" text="{AppModel>STF_NUMBER}"/>-->
+			
+				<Text text="{AppModel>STF_NUMBER}"/>
+					<Text text="{AppModel>FULL_NM}"/>
+				<!--<ObjectIdentifier title="{AppModel>ULU_T}" text="{AppModel>ULU_C}"/>-->
+				<!--<ObjectIdentifier title="{AppModel>FDLU_T}" text="{AppModel>FDLU_C}"/>-->
+			</cells>
+		</ColumnListItem>
+		<columns>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<header>
+					<Text text="Staff ID"/>
+				</header>
+			</Column>
+			<Column minScreenWidth="Desktop" demandPopin="true">
+				<header>
+					<Text text="Full Name"/>
+				</header>
+			</Column>			
+			<!--<Column minScreenWidth="Desktop" demandPopin="true">-->
+			<!--	<header>-->
+			<!--		<Text text="Nusnet ID"/>-->
+			<!--	</header>-->
+			<!--</Column>-->
+			<!--<Column minScreenWidth="Desktop" demandPopin="true">-->
+			<!--	<header>-->
+			<!--		<Text text="ULU"/>-->
+			<!--	</header>-->
+			<!--</Column>-->
+			<!--<Column minScreenWidth="Desktop" demandPopin="true">-->
+			<!--	<header>-->
+			<!--		<Text text="FDLU"/>-->
+			<!--	</header>-->
+			<!--</Column>			-->
+		</columns>
+	</TableSelectDialog>
+</core:FragmentDefinition>
